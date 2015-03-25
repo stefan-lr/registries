@@ -22,8 +22,13 @@
 				var mes = {translationCode:'personal.change.password.password.changed'};
 				notificationFactory.info(mes);
 					}).error(function(err, data) {
-						var mes = {translationCode: err.code,translationData:data,time:3000};
-						notificationFactory.error(mes);
+						if (data == 400) {
+							var mes = {translationCode: err.code,translationData:data,time:3000};
+							notificationFactory.error(mes);
+						} else {
+							var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
+							notificationFactory.error(mes);
+						}
 					});
 				}
 			};
