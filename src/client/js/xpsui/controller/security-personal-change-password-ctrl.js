@@ -21,9 +21,9 @@
 					SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data) {
 				var mes = {translationCode:'personal.change.password.password.changed'};
 				notificationFactory.info(mes);
-					}).error(function(err,data) {
-				var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
-				notificationFactory.error(mes);
+					}).error(function(err, data) {
+						var mes = {translationCode: err.code,translationData:data,time:3000};
+						notificationFactory.error(mes);
 					});
 				}
 			};
