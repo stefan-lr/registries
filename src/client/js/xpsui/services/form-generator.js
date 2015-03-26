@@ -57,6 +57,7 @@
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
+
 					field = angular.element('<div xpsui-uploadable-image xpsui-imageresizor /></div>');
 					field.attr('xpsui-schema', schemaPath);
 					var width = schemaFragment.uploadableImage ? 
@@ -66,8 +67,10 @@
 
 					field.attr('psui-imageresizor-width', width);
 					field.attr('psui-imageresizor-height', height);
-					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
-						+ (height ? 'height:'+height+'px !important;':'')
+					field.attr('style', 'width: 100% !important;'
+						+ (height ? 'height:'+height+'px !important;':'height:150px')
+						+ 'background-size: contain;'
+						+ 'background-position: top left;'
 					);
 				} else if(schemaFragment.type.toLowerCase() === "date"){
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
@@ -127,14 +130,17 @@
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
-					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
 					var width = schemaFragment.uploadableImage ? 
-						schemaFragment.uploadableImage.width : schemaFragment.render.width;
+							schemaFragment.uploadableImage.width : schemaFragment.render.width;
 					var height = schemaFragment.uploadableImage ? 
 						schemaFragment.uploadableImage.height : schemaFragment.render.height;
+					var style = 'width: 100% !important;'
+						+ (height ? 'height:'+height+'px !important;':'height:150px;')
+						+ 'background-size: contain;'
+						+ 'background-repeat: no-repeat;'
+						+ 'background-position: top left;';
+					field = angular.element('<div style="' + style + 'background-image: url(\'{{' + modelPath + '}}\')"></div>');
 
-					field.attr('width', width);
-					field.attr('height', height);
 				} else if(schemaFragment.type.toLowerCase() === "date" 
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-view></div>');
