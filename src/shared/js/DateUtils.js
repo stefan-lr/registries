@@ -14,7 +14,9 @@
 	 * @class DateUtils
 	 * @constructor
 	 */
-	var DateUtils = function() {};
+	var DateUtils = function($translate) {
+		this.$translate = $translate;
+	};
 
 	/**
 	 *	Converts date from backend to frontend format.
@@ -183,7 +185,7 @@
 	 */
 	DateUtils.prototype.strToReverse = function(strDate) {
 		var d = new Date();
-		var s = value.split('.');
+		var s = strDate.split('.');
 		if (s.length === 3) {
 			var day = parseInt(s[0]);
 			var month = parseInt(s[1]);
@@ -215,10 +217,92 @@
 		var month = strReverseDate.substring(4,6);
 		var day = strReverseDate.substring(6,8);
 		if (year.length === 4 && month.length === 2 && day.length === 2) {
-			var d = new Date(year, month-1, day);
-			return d;
+			return new Date(year, month-1, day);
 		}
 		return null;
+	};
+
+	/**
+	 * Methods from date-util service in client.
+	 */
+	DateUtils.prototype.getDateFromYYYYMMDD = function (dateYYYYMMDD) {
+		return new DateUtils().reverseToDate(dateYYYYMMDD);
+	};
+//	DateUtils.prototype.getDateFromDMYYYY = function (dateDMYYYY) {
+//		return new DateUtils().(dateDMYYYY);
+//	};
+	function formatterDMYYYY(date) {
+		if (angular.isString(date)) {
+			date = new DateUtils().reverseToDate(date);
+		}
+		if (date instanceof Date) {
+			return date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear();
+		}
+		return null;
+	};
+	DateUtils.prototype.formatter = function(value) {
+		if (value) {
+			var string = formatterDMYYYY(value);
+			if (string) {
+				return string;
+			}
+
+			return value;
+		}
+		return '';
+	};
+	DateUtils.prototype.parser = function(value) {
+		if (value) {
+			var dateUtil = new DateUtils();
+			if (!angular.isDate(value)) {
+				console.log('Undefined? ' + value);
+				value = dateUtil.reverseToDate(dateUtil.strToReverse(value));
+			}
+			var string = dateUtil.dateToReverse(value);
+			if(string){
+				return string;
+			}
+			// invalid
+			return undefined;
+		}
+	};
+//	DateUtils.prototype.formatterToBackend = function(value) {
+//		if (value) {
+//			var string = new DateUtils().dateToStr(value);
+//			if(string){
+//				return string;
+//			}
+//
+//			return value;
+//		}
+//		return '';
+//	};
+	DateUtils.prototype.getNameOfMonth = function(month) {
+		if (month == 0) {
+			return this.$translate.instant('date.jan');
+		}else if (month == 1){
+			return this.$translate.instant('date.feb');
+		}else if (month == 2){
+			return this.$translate.instant('date.mar');
+		}else if (month == 3){
+			return this.$translate.instant('date.apr');
+		}else if (month == 4){
+			return this.$translate.instant('date.may');
+		}else if (month == 5){
+			return this.$translate.instant('date.jun');
+		}else if (month == 6){
+			return this.$translate.instant('date.jul');
+		}else if (month == 7){
+			return this.$translate.instant('date.aug');	
+		}else if (month == 8){
+			return this.$translate.instant('date.sep');
+		}else if (month == 9){
+			return this.$translate.instant('date.oct');
+		}else if (month == 10){
+			return this.$translate.instant('date.nov');
+		}else if (month == 11){
+			return this.$translate.instant('date.dec');
+		}
 	};
 
 	/**
@@ -241,7 +325,9 @@
 		 *
 		 * @property angularExport
 		 */
-		angular.module('xpsui:services').factory('registries.dateUtils', [ DateUtils ]);
+		angular.module('xpsui:services').factory('xpsui:DateUtil', [ '$translate', 
+			function ($translate) { return new DateUtils($translate); } 
+		]);
 	}
 
 }(
