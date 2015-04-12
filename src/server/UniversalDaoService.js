@@ -230,7 +230,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 						next(err);
 						return;
 					}
-					res.json(data);
+					callback(null,null,data);
 
 
 					if (compiledSchema[consts.FIRE_EVENTS] && compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE] ){
