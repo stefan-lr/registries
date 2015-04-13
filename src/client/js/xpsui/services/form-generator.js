@@ -130,7 +130,7 @@
 						+ 'background-size: contain;'
 						+ 'background-repeat: no-repeat;'
 						+ 'background-position: top left;';
-					field = angular.element('<div style="' + style + 'background-image: url(\'{{' + modelPath + '}}\')"></div>');
+					field = angular.element('<div style="' + style + 'background-image: url(\'{{' + modelPath + '?' + modelPath + ':\'/img/no_photo.jpg\'}}\')"></div>');
 				} else if(schemaFragment.type === "date"
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')) {
 					field = angular.element('<div xpsui-date-view></div>');
