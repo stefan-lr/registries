@@ -1,0 +1,28 @@
+
+.dashboard-widget-container {
+	float: left;
+	width: 40%;
+	margin: 10px 4%;
+	box-sizing: border-box;
+
+	.dashboard-widget-title {
+		padding: 10px;
+		border-bottom: 1px solid gray;
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+
+	.dashboard-widget-content {
+		padding: 10px;
+		min-height: 150px;
+	}
+
+}
+
+@media (max-width: $screen-sm) {
+	.dashboard-widget-container {
+		float: none;
+		width: 90%;
+		margin: 10px 4%;
+	}
+}
