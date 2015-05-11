@@ -15,13 +15,32 @@
 
 				var fieldDef = $parse(attrs.xpsuiCalculable)(scope);
 				if (fieldDef && fieldDef.calculated) {
-					console.log('creating calculated column');
 					scope.$watch(
 						'model.obj',
 						function(newVal, oldVal, $currentScope) {
 							var newValue = calculator.createProperty(fieldDef.calculated).getter(scope);
 							console.log('Model changed updating calculated value ' + attrs.xpsuiCalculable);
 							console.log('New value: ' + newValue);
+							$parse(attrs.ngModel).assign(scope, newValue);
+						}
+					);
+				}
+				if (fieldDef && fieldDef.defaultCalculated) {
+					scope.$watch(
+						'model.obj.id',
+						function(newVal, oldVal, $currentScope) {
+							var newValue = calculator.createProperty(fieldDef.defaultCalculated).getter(scope);
+							console.log('Model changed setting calculated default ' + attrs.xpsuiCalculable);
+							console.log('New value: ' + newValue);
+							$parse(attrs.ngModel).assign(scope, newValue);
+							//ngModel.$setViewValue(newValue);
+							// No idea why only this works.
+							//calculator.createProperty(fieldDef.defaultCalculated).setter(scope);
+							if (scope.model.obj && scope.model.obj.baseData) {
+								scope.model.obj.baseData.vypoc = newValue;
+							}
+							ngModel.viewValue = newValue;
+							ngModel.modelValue = newValue;
 							$parse(attrs.ngModel).assign(scope, newValue);
 						}
 					);
