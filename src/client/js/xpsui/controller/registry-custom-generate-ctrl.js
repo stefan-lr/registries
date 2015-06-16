@@ -44,24 +44,31 @@
 			function fillClubLogos() {
 				var clubIds = [];
 				for (var pos=0; pos<$scope.model.listOfTeam.team.length; pos++) {
-					clubIds.push($scope.model.listOfTeam.team[pos].oid);
+					(function (position) {
+						var rosterId = $scope.model.listOfTeam.team[position].oid;
+						$http({
+							method : 'GET',
+							url : '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frosters~23views~2Frosters~2Fview/' + rosterId,
+							data : {
+							}
+						}).success(function(roster) {
+							fillForClub(position, roster.baseData.club.oid);
+						}).error(function(err) {
+							callback(err);
+						});
+					}(pos));
 				}
 
-				var searchSchema="uri://registries/rosters#views/rosters/search";
+			}
+
+			function fillForClub(position, clubOid) {
 				$http({
-					method : 'POST',
-					url : '/search/' + schemaUtilFactory.encodeUri(searchSchema),
+					method : 'GET',
+					url : '/udao/getBySchema/uri~3A~2F~2Fregistries~2Forganizations~23views~2Fclub~2Fview/' + clubOid,
 					data : {
-						crits :[{
-							f : "oid",
-							v : clubIds,
-							op : "in"
-						}],
-						sorts: [ { f:"baseData.date", o: "asc"}]
 					}
-				}).success(function(teamsWithLogos){
-					var x = teamsWithLogos;
-					console.log(x.length);
+				}).success(function(club) {
+					$scope.model.listOfTeam.team[position].photo = club.logoInfo.photo;
 				}).error(function(err) {
 					callback(err);
 				});
