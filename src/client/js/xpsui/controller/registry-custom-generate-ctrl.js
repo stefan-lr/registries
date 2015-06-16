@@ -41,6 +41,32 @@
 
 			};
 
+			function fillClubLogos() {
+				var clubIds = [];
+				for (var pos=0; pos<$scope.model.listOfTeam.team.length; pos++) {
+					clubIds.push($scope.model.listOfTeam.team[pos].oid);
+				}
+
+				var searchSchema="uri://registries/rosters#views/rosters/search";
+				$http({
+					method : 'POST',
+					url : '/search/' + schemaUtilFactory.encodeUri(searchSchema),
+					data : {
+						crits :[{
+							f : "oid",
+							v : clubIds,
+							op : "in"
+						}],
+						sorts: [ { f:"baseData.date", o: "asc"}]
+					}
+				}).success(function(teamsWithLogos){
+					var x = teamsWithLogos;
+					console.log(x.length);
+				}).error(function(err) {
+					callback(err);
+				});
+			}
+
 			// /registry/generated/:schemaFrom/:idFrom/:generateBy/:template
 			$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schemaFrom+'/'+ $routeParams.idFrom})
 			.success(function(data, status, headers, config){
@@ -50,10 +76,12 @@
 						notificationFactory.error({translationCode:'registry.unsuccesfully.generated', time:3000});
 					} else
 					notificationFactory.info({translationCode:'registry.succesfully.generated', time:3000});
+					fillClubLogos();
 				});
 
 			}).error(function(err) {
 				notificationFactory.error(err);
+				fillClubLogos();
 			});
 		}
 	]);
